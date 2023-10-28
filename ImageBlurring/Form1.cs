@@ -19,8 +19,8 @@ namespace ImageBlurring
 
         private void btnBlur_Click(object sender, EventArgs e)
         {
-            IBlur blur = new BoxBlur(15, (Bitmap)pictureBox1.Image);
-            pictureBox2.Image = (Bitmap)blur.Blur();
+            IBlur blur = new BoxBlur(5, (Bitmap)pictureBox1.Image);
+            pictureBox2.Image = blur.Blur();
         }
     }
 }

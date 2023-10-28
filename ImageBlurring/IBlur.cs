@@ -9,7 +9,7 @@ namespace ImageBlurring
     internal interface IBlur
     {
         public int Radius { get; set; }
-        public Bitmap BitmapSource { get; set; }
+        public Bitmap Source { get; set; }
         public Bitmap BitmapResult { get; set; }
         public Bitmap Blur();
     }
