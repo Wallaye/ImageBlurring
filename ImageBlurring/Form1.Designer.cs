@@ -40,19 +40,19 @@
             // 
             // pictureBox1
             // 
-            pictureBox1.Location = new Point(10, 9);
-            pictureBox1.Margin = new Padding(3, 2, 3, 2);
+            pictureBox1.BorderStyle = BorderStyle.FixedSingle;
+            pictureBox1.Location = new Point(11, 12);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(800, 800);
+            pictureBox1.Size = new Size(700, 700);
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             // 
             // pictureBox2
             // 
-            pictureBox2.Location = new Point(822, 9);
-            pictureBox2.Margin = new Padding(3, 2, 3, 2);
+            pictureBox2.BorderStyle = BorderStyle.FixedSingle;
+            pictureBox2.Location = new Point(734, 14);
             pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(800, 800);
+            pictureBox2.Size = new Size(700, 700);
             pictureBox2.TabIndex = 1;
             pictureBox2.TabStop = false;
             // 
@@ -62,10 +62,9 @@
             // 
             // btnOpenFile
             // 
-            btnOpenFile.Location = new Point(10, 813);
-            btnOpenFile.Margin = new Padding(3, 2, 3, 2);
+            btnOpenFile.Location = new Point(11, 720);
             btnOpenFile.Name = "btnOpenFile";
-            btnOpenFile.Size = new Size(122, 38);
+            btnOpenFile.Size = new Size(139, 51);
             btnOpenFile.TabIndex = 2;
             btnOpenFile.Text = "Открыть файл";
             btnOpenFile.UseVisualStyleBackColor = true;
@@ -73,10 +72,9 @@
             // 
             // btnBlur
             // 
-            btnBlur.Location = new Point(777, 813);
-            btnBlur.Margin = new Padding(3, 2, 3, 2);
+            btnBlur.Location = new Point(669, 723);
             btnBlur.Name = "btnBlur";
-            btnBlur.Size = new Size(82, 38);
+            btnBlur.Size = new Size(94, 51);
             btnBlur.TabIndex = 3;
             btnBlur.Text = "Blur";
             btnBlur.UseVisualStyleBackColor = true;
@@ -87,22 +85,22 @@
             comboBox1.Font = new Font("Segoe UI", 14F, FontStyle.Regular, GraphicsUnit.Point);
             comboBox1.FormattingEnabled = true;
             comboBox1.Items.AddRange(new object[] { "Box blur", "Gaussian blur", "Mean filter", "Sobel's operator" });
-            comboBox1.Location = new Point(536, 816);
+            comboBox1.Location = new Point(296, 723);
+            comboBox1.Margin = new Padding(3, 4, 3, 4);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(198, 33);
+            comboBox1.Size = new Size(226, 39);
             comboBox1.TabIndex = 4;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1634, 861);
+            ClientSize = new Size(1466, 819);
             Controls.Add(comboBox1);
             Controls.Add(btnBlur);
             Controls.Add(btnOpenFile);
             Controls.Add(pictureBox2);
             Controls.Add(pictureBox1);
-            Margin = new Padding(3, 2, 3, 2);
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";

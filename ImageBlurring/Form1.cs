@@ -19,7 +19,19 @@ namespace ImageBlurring
 
         private void btnBlur_Click(object sender, EventArgs e)
         {
-            IBlur blur = new BoxBlur(5, (Bitmap)pictureBox1.Image);
+            IBlur blur;
+            switch (comboBox1.SelectedIndex)
+            {
+                case 0:
+                    blur = new BoxBlur(3, (Bitmap)pictureBox1.Image);
+                    break;
+                case 1:
+                    blur = new GaussianBlur(3, (Bitmap)pictureBox1.Image);
+                    break;
+                default:
+                    blur = new BoxBlur(3, (Bitmap)pictureBox1.Image);
+                    break;
+            }
             pictureBox2.Image = blur.Blur();
         }
     }
