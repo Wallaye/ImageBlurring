@@ -28,6 +28,9 @@ namespace ImageBlurring
                 case 1:
                     blur = new GaussianBlur(3, (Bitmap)pictureBox1.Image);
                     break;
+                case 2:
+                    blur = new MedianFilter(3, (Bitmap)pictureBox1.Image);
+                    break;
                 default:
                     blur = new BoxBlur(3, (Bitmap)pictureBox1.Image);
                     break;

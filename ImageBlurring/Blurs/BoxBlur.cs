@@ -30,10 +30,10 @@ namespace ImageBlurring.Blurs
         {
             _radius = radius;
             Source = (Bitmap)src.Clone();
-            _summedTableA = new int[Source.Width, Source.Height];
-            _summedTableR = new int[Source.Width, Source.Height];
-            _summedTableG = new int[Source.Width, Source.Height];
-            _summedTableB = new int[Source.Width, Source.Height];
+            _summedTableR = new int[Source.Height, Source.Width];
+            _summedTableA = new int[Source.Height, Source.Width];
+            _summedTableG = new int[Source.Height, Source.Width];
+            _summedTableB = new int[Source.Height, Source.Width];
             SetSummedTables();
         }
 
@@ -55,7 +55,7 @@ namespace ImageBlurring.Blurs
                         - _summedTableB[i - _radius - 1, j + _radius] + _summedTableB[i - _radius - 1, j - _radius - 1];
                     A /= area;
                     R /= area; G /= area; B /= area;
-                    result.SetPixel(i, j, Color.FromArgb(A, R, G, B));
+                    result.SetPixel(j, i, Color.FromArgb(A, R, G, B));
                 }
             }
 
@@ -73,19 +73,19 @@ namespace ImageBlurring.Blurs
             //initializing 1st row of matrix
             for (int i = 1; i < Source.Width; i++)
             {
-                _summedTableA[0, i] = _summedTableA[0, i - 1] + Source.GetPixel(0, i).A;
-                _summedTableR[0, i] = _summedTableR[0, i - 1] + Source.GetPixel(0, i).R;
-                _summedTableG[0, i] = _summedTableG[0, i - 1] + Source.GetPixel(0, i).G;
-                _summedTableB[0, i] = _summedTableB[0, i - 1] + Source.GetPixel(0, i).B;
+                _summedTableA[0, i] = _summedTableA[0, i - 1] + Source.GetPixel(i, 0).A;
+                _summedTableR[0, i] = _summedTableR[0, i - 1] + Source.GetPixel(i, 0).R;
+                _summedTableG[0, i] = _summedTableG[0, i - 1] + Source.GetPixel(i, 0).G;
+                _summedTableB[0, i] = _summedTableB[0, i - 1] + Source.GetPixel(i, 0).B;
             }
 
             //initializing 1st col of matrix
             for (int j = 1; j < Source.Height; j++)
             {
-                _summedTableA[j, 0] = _summedTableA[j - 1, 0] + Source.GetPixel(j, 0).A;
-                _summedTableR[j, 0] = _summedTableR[j - 1, 0] + Source.GetPixel(j, 0).R;
-                _summedTableG[j, 0] = _summedTableG[j - 1, 0] + Source.GetPixel(j, 0).G;
-                _summedTableB[j, 0] = _summedTableB[j - 1, 0] + Source.GetPixel(j, 0).B;
+                _summedTableA[j, 0] = _summedTableA[j - 1, 0] + Source.GetPixel(0, j).A;
+                _summedTableR[j, 0] = _summedTableR[j - 1, 0] + Source.GetPixel(0, j).R;
+                _summedTableG[j, 0] = _summedTableG[j - 1, 0] + Source.GetPixel(0, j).G;
+                _summedTableB[j, 0] = _summedTableB[j - 1, 0] + Source.GetPixel(0, j).B;
             }
 
             //setting table;
@@ -95,13 +95,13 @@ namespace ImageBlurring.Blurs
                 for (int j = 1; j < Source.Width; j++) 
                 {
                     _summedTableA[i, j] = _summedTableA[i - 1, j] + _summedTableA[i, j - 1] 
-                        - _summedTableA[i - 1, j - 1] + Source.GetPixel(i, j).A;
+                        - _summedTableA[i - 1, j - 1] + Source.GetPixel(j, i).A;
                     _summedTableR[i, j] = _summedTableR[i - 1, j] + _summedTableR[i, j - 1] 
-                        - _summedTableR[i - 1, j - 1] + Source.GetPixel(i, j).R;
+                        - _summedTableR[i - 1, j - 1] + Source.GetPixel(j, i).R;
                     _summedTableG[i, j] = _summedTableG[i - 1, j] + _summedTableG[i, j - 1] 
-                        - _summedTableG[i - 1, j - 1] + Source.GetPixel(i, j).G;
+                        - _summedTableG[i - 1, j - 1] + Source.GetPixel(j, i).G;
                     _summedTableB[i, j] = _summedTableB[i - 1, j] + _summedTableB[i, j - 1] 
-                        - _summedTableB[i - 1, j - 1] + Source.GetPixel(i, j).B;
+                        - _summedTableB[i - 1, j - 1] + Source.GetPixel(j, i).B;
                 }
             }
         }

@@ -84,12 +84,13 @@
             // 
             comboBox1.Font = new Font("Segoe UI", 14F, FontStyle.Regular, GraphicsUnit.Point);
             comboBox1.FormattingEnabled = true;
-            comboBox1.Items.AddRange(new object[] { "Box blur", "Gaussian blur", "Mean filter", "Sobel's operator" });
+            comboBox1.Items.AddRange(new object[] { "Box blur", "Gaussian blur", "Median filter", "Sobel's operator" });
             comboBox1.Location = new Point(296, 723);
             comboBox1.Margin = new Padding(3, 4, 3, 4);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(226, 39);
             comboBox1.TabIndex = 4;
+            comboBox1.SelectedIndex = 0;
             // 
             // Form1
             // 
