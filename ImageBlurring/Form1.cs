@@ -31,6 +31,9 @@ namespace ImageBlurring
                 case 2:
                     blur = new MedianFilter(3, (Bitmap)pictureBox1.Image);
                     break;
+                case 3:
+                    blur = new SobelOperator((Bitmap)pictureBox1.Image);
+                    break;
                 default:
                     blur = new BoxBlur(3, (Bitmap)pictureBox1.Image);
                     break;
