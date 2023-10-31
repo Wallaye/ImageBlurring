@@ -21,12 +21,37 @@ namespace ImageBlurring.Blurs
         private int _area;
         public Bitmap Source { get; set; }
         public Bitmap BitmapResult { get; set; }
+        private int[,] pixelsA { get; set; }
+        private int[,] pixelsR { get; set; }
+        private int[,] pixelsG { get; set; }
+        private int[,] pixelsB { get; set; }
 
         public MedianFilter(int radius, Bitmap source)
         {
             Source = (Bitmap)source.Clone();
             _radius = radius;
             _area = (2 * _radius + 1) * (2 * _radius + 1);
+            pixelsA = new int[Source.Height + 2 * radius, Source.Width + 2 * radius];
+            pixelsR = new int[Source.Height + 2 * radius, Source.Width + 2 * radius];
+            pixelsG = new int[Source.Height + 2 * radius, Source.Width + 2 * radius];
+            pixelsB = new int[Source.Height + 2 * radius, Source.Width + 2 * radius];
+            GenerateTables();
+        }
+
+        private void GenerateTables()
+        {
+            for (int i = 0; i < Source.Height + 2 * _radius; i++)
+            {
+                for (int j = 0; j < Source.Width + 2 * _radius; j++)
+                {
+                    int indexI = i < _radius ? 0 : (i > Source.Width + _radius - 1 ? Source.Width - 1 : i - _radius);
+                    int indexJ = j < _radius ? 0 : (j > Source.Width + _radius - 1 ? Source.Width - 1 : j - _radius);
+                    pixelsA[i, j] = Source.GetPixel(indexJ, indexI).A;
+                    pixelsR[i, j] = Source.GetPixel(indexJ, indexI).R;
+                    pixelsG[i, j] = Source.GetPixel(indexJ, indexI).G;
+                    pixelsB[i, j] = Source.GetPixel(indexJ, indexI).B;
+                }
+            }
         }
 
         public Bitmap Blur()
@@ -36,19 +61,19 @@ namespace ImageBlurring.Blurs
             int[] arrayR = new int[_area];
             int[] arrayG = new int[_area];
             int[] arrayB = new int[_area];
-            for (int i = _radius; i < Source.Height - _radius; i++)
+            for (int i = 0; i < Source.Height; i++)
             {
-                for (int j = _radius; j < Source.Width - _radius; j++)
+                for (int j = 0; j < Source.Width; j++)
                 {
                     int k = 0;
                     for (int x = -_radius; x <= _radius; x++)
                     {
                         for (int y = -_radius; y <= _radius; y++)
                         {
-                            arrayA[k] = Source.GetPixel(j + y, i + x).A;
-                            arrayR[k] = Source.GetPixel(j + y, i + x).R;
-                            arrayG[k] = Source.GetPixel(j + y, i + x).G;
-                            arrayB[k] = Source.GetPixel(j + y, i + x).B;
+                            arrayA[k] = pixelsA[i + x + _radius, j + y + _radius];
+                            arrayR[k] = pixelsR[i + x + _radius, j + y + _radius];
+                            arrayG[k] = pixelsG[i + x + _radius, j + y + _radius];
+                            arrayB[k] = pixelsB[i + x + _radius, j + y + _radius];
                             k++;
                         }
                     }

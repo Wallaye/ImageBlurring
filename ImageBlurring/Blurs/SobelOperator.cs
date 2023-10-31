@@ -20,6 +20,11 @@ namespace ImageBlurring.Blurs
         private int _radius = 0;
         public Bitmap Source { get; set; }
         public Bitmap BitmapResult { get; set; }
+        private int[,] pixelsA { get; set; }
+        private int[,] pixelsR { get; set; }
+        private int[,] pixelsG { get; set; }
+        private int[,] pixelsB { get; set; }
+
         private int[,] GX = new int[3, 3]
         {
             { -1, 0, 1 },
@@ -41,14 +46,35 @@ namespace ImageBlurring.Blurs
         public SobelOperator(Bitmap source)
         {
             Source = (Bitmap)source.Clone();
+            pixelsA = new int[Source.Height + 2, Source.Width + 2];
+            pixelsR = new int[Source.Height + 2, Source.Width + 2];
+            pixelsG = new int[Source.Height + 2, Source.Width + 2];
+            pixelsB = new int[Source.Height + 2, Source.Width + 2];
+            GenerateTables();
+        }
+
+        private void GenerateTables()
+        {
+            for (int i = 0; i < Source.Height + 2 * _radius; i++)
+            {
+                for (int j = 0; j < Source.Width + 2 * _radius; j++)
+                {   
+                    int indexI = i < _radius ? 0 : (i > Source.Width + _radius - 1 ? Source.Width - 1 : i - _radius);
+                    int indexJ = j < _radius ? 0 : (j > Source.Width + _radius - 1 ? Source.Width - 1 : j - _radius);
+                    pixelsA[i, j] = Source.GetPixel(indexJ, indexI).A;
+                    pixelsR[i, j] = Source.GetPixel(indexJ, indexI).R;
+                    pixelsG[i, j] = Source.GetPixel(indexJ, indexI).G;
+                    pixelsB[i, j] = Source.GetPixel(indexJ, indexI).B;
+                }
+            }
         }
 
         public Bitmap Blur()
         {
             Bitmap result = (Bitmap)Source.Clone();
-            for (int i = 1; i < Source.Height - 1; i++)
+            for (int i = 0; i < Source.Height; i++)
             {
-                for (int j = 1; j < Source.Width - 1; j++)
+                for (int j = 0; j < Source.Width; j++)
                 {
                     Color c = Source.GetPixel(j, i);
                     Color color = GetGrayColor(c.R, c.G, c.B);
@@ -63,12 +89,12 @@ namespace ImageBlurring.Blurs
                         for (int y = -1; y <= 1; y++)
                         {
                             Color temp = Source.GetPixel(j + y, i + x);
-                            sumRX += temp.R * GX[x + 1, y + 1];
-                            sumRY += temp.R * GY[x + 1, y + 1];
-                            sumGX += temp.G * GX[x + 1, y + 1];
-                            sumGY += temp.G * GY[x + 1, y + 1];
-                            sumBX += temp.B * GX[x + 1, y + 1];
-                            sumBY += temp.B * GY[x + 1, y + 1];
+                            sumRX += pixelsR[i + x + 1, j + y + 1] * GX[x + 1, y + 1];
+                            sumRY += pixelsR[i + x + 1, j + y + 1] * GY[x + 1, y + 1];
+                            sumGX += pixelsG[i + x + 1, j + y + 1] * GX[x + 1, y + 1];
+                            sumGY += pixelsG[i + x + 1, j + y + 1] * GY[x + 1, y + 1];
+                            sumBX += pixelsB[i + x + 1, j + y + 1] * GX[x + 1, y + 1];
+                            sumBY += pixelsB[i + x + 1, j + y + 1] * GY[x + 1, y + 1];
                         }
                     }
                     int sumR = (int)Math.Sqrt(sumRX * sumRX + sumRY * sumRY);
