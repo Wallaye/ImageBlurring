@@ -20,7 +20,7 @@ namespace ImageBlurring.Blurs
         private int _radius;
         public Bitmap Source { get; set; }
         public Bitmap BitmapResult { get; set; }
-        private const double sigma = 1.5;
+        private const double sigma = 1;
 
         private double[,] _weightMatrix { get; set; }
 

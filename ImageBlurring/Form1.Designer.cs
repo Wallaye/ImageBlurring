@@ -34,8 +34,10 @@
             btnOpenFile = new Button();
             btnBlur = new Button();
             comboBox1 = new ComboBox();
+            numericUpDown1 = new NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             SuspendLayout();
             // 
             // pictureBox1
@@ -44,6 +46,7 @@
             pictureBox1.Location = new Point(11, 12);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(700, 700);
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             // 
@@ -53,6 +56,7 @@
             pictureBox2.Location = new Point(734, 14);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(700, 700);
+            pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox2.TabIndex = 1;
             pictureBox2.TabStop = false;
             // 
@@ -90,13 +94,23 @@
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(226, 39);
             comboBox1.TabIndex = 4;
-            comboBox1.SelectedIndex = 0;
+            // 
+            // numericUpDown1
+            // 
+            numericUpDown1.Location = new Point(840, 733);
+            numericUpDown1.Maximum = new decimal(new int[] { 300, 0, 0, 0 });
+            numericUpDown1.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDown1.Name = "numericUpDown1";
+            numericUpDown1.Size = new Size(150, 27);
+            numericUpDown1.TabIndex = 5;
+            numericUpDown1.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1466, 819);
+            Controls.Add(numericUpDown1);
             Controls.Add(comboBox1);
             Controls.Add(btnBlur);
             Controls.Add(btnOpenFile);
@@ -107,6 +121,7 @@
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             ResumeLayout(false);
         }
 
@@ -118,5 +133,6 @@
         private Button btnOpenFile;
         private Button btnBlur;
         private ComboBox comboBox1;
+        private NumericUpDown numericUpDown1;
     }
 }

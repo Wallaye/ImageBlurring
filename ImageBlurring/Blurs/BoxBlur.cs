@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http.Json;
@@ -30,10 +31,10 @@ namespace ImageBlurring.Blurs
         {
             _radius = radius;
             Source = (Bitmap)src.Clone();
-            _summedTableR = new int[Source.Height, Source.Width];
-            _summedTableA = new int[Source.Height, Source.Width];
-            _summedTableG = new int[Source.Height, Source.Width];
-            _summedTableB = new int[Source.Height, Source.Width];
+            _summedTableR = new int[Source.Height + 2 * radius + 1, Source.Width + 2 * radius + 1];
+            _summedTableA = new int[Source.Height + 2 * radius + 1, Source.Width + 2 * radius + 1];
+            _summedTableG = new int[Source.Height + 2 * radius + 1, Source.Width + 2 * radius + 1];
+            _summedTableB = new int[Source.Height + 2 * radius + 1, Source.Width + 2 * radius + 1];
             SetSummedTables();
         }
 
@@ -41,67 +42,83 @@ namespace ImageBlurring.Blurs
         {
             int area = (int)Math.Pow(2 * _radius + 1, 2);
             Bitmap result = (Bitmap)Source.Clone();
-            for (int i = _radius + 1; i < Source.Height - _radius - 1; i++)
+            for (int i = 0; i < Source.Height; i++)
             {   
-                for (int j = _radius + 1; j < Source.Width - _radius - 1; j++)
+                for (int j = 0; j < Source.Width; j++)
                 {
-                    int A = _summedTableA[i + _radius, j + _radius] - _summedTableA[i + _radius, j - _radius - 1]
-                        - _summedTableA[i - _radius - 1, j + _radius] + _summedTableA[i - _radius - 1, j - _radius - 1];
-                    int R = _summedTableR[i + _radius, j + _radius] - _summedTableR[i + _radius, j - _radius - 1]
-                        - _summedTableR[i - _radius - 1, j + _radius] + _summedTableR[i - _radius - 1, j - _radius - 1];
-                    int G = _summedTableG[i + _radius, j + _radius] - _summedTableG[i + _radius, j - _radius - 1]
-                        - _summedTableG[i - _radius - 1, j + _radius] + _summedTableG[i - _radius - 1, j - _radius - 1];
-                    int B = _summedTableB[i + _radius, j + _radius] - _summedTableB[i + _radius, j - _radius - 1]
-                        - _summedTableB[i - _radius - 1, j + _radius] + _summedTableB[i - _radius - 1, j - _radius - 1];
+                    int offset = _radius + 1;
+                    int A = _summedTableA[i + _radius + offset, j + _radius + offset]
+                        - _summedTableA[i + _radius + offset, j - _radius - 1 + offset]
+                        - _summedTableA[i - _radius - 1 + offset, j + _radius + offset]
+                        + _summedTableA[i - _radius - 1 + offset, j - _radius - 1 + offset];
+
+                    int R = _summedTableR[i + _radius + offset, j + _radius + offset]
+                        - _summedTableR[i + _radius + offset, j - _radius - 1 + offset]
+                        - _summedTableR[i - _radius - 1 + offset, j + _radius + offset]
+                        + _summedTableR[i - _radius - 1 + offset, j - _radius - 1 + offset];
+
+                    int G = _summedTableG[i + _radius + offset, j + _radius + offset]
+                        - _summedTableG[i + _radius + offset, j - _radius - 1 + offset]
+                        - _summedTableG[i - _radius - 1 + offset, j + _radius + offset]
+                        + _summedTableG[i - _radius - 1 + offset, j - _radius - 1 + offset];
+
+                    int B = _summedTableB[i + _radius + offset, j + _radius + offset]
+                        - _summedTableB[i + _radius + offset, j - _radius - 1 + offset]
+                        - _summedTableB[i - _radius - 1 + offset, j + _radius + offset]
+                        + _summedTableB[i - _radius - 1 + offset, j - _radius - 1 + offset];
                     A /= area;
                     R /= area; G /= area; B /= area;
                     result.SetPixel(j, i, Color.FromArgb(A, R, G, B));
                 }
             }
-
             return result;
         }
 
         private void SetSummedTables()
         {
             //initializing first elements
-            _summedTableA[0, 0] = Source.GetPixel(0, 0).A;
-            _summedTableR[0, 0] = Source.GetPixel(0, 0).R;
-            _summedTableG[0, 0] = Source.GetPixel(0, 0).G;
-            _summedTableB[0, 0] = Source.GetPixel(0, 0).B;
+            _summedTableA[1, 1] = Source.GetPixel(0, 0).A;
+            _summedTableR[1, 1] = Source.GetPixel(0, 0).R;
+            _summedTableG[1, 1] = Source.GetPixel(0, 0).G;
+            _summedTableB[1, 1] = Source.GetPixel(0, 0).B;
 
             //initializing 1st row of matrix
-            for (int i = 1; i < Source.Width; i++)
+            for (int i = 1; i < Source.Width + 2 * _radius + 1; i++)
             {
-                _summedTableA[0, i] = _summedTableA[0, i - 1] + Source.GetPixel(i, 0).A;
-                _summedTableR[0, i] = _summedTableR[0, i - 1] + Source.GetPixel(i, 0).R;
-                _summedTableG[0, i] = _summedTableG[0, i - 1] + Source.GetPixel(i, 0).G;
-                _summedTableB[0, i] = _summedTableB[0, i - 1] + Source.GetPixel(i, 0).B;
+                int index = i < _radius + 1 ? 0 : (i > Source.Width + _radius - 1 ? Source.Width - 1 : i - _radius);
+                _summedTableA[1, i] = _summedTableA[1, i - 1] + Source.GetPixel(index, 0).A;
+                _summedTableR[1, i] = _summedTableR[1, i - 1] + Source.GetPixel(index, 0).R;
+                _summedTableG[1, i] = _summedTableG[1, i - 1] + Source.GetPixel(index, 0).G;
+                _summedTableB[1, i] = _summedTableB[1, i - 1] + Source.GetPixel(index, 0).B;
             }
 
             //initializing 1st col of matrix
-            for (int j = 1; j < Source.Height; j++)
+            for (int j = 1; j < Source.Height + 2 * _radius + 1; j++)
             {
-                _summedTableA[j, 0] = _summedTableA[j - 1, 0] + Source.GetPixel(0, j).A;
-                _summedTableR[j, 0] = _summedTableR[j - 1, 0] + Source.GetPixel(0, j).R;
-                _summedTableG[j, 0] = _summedTableG[j - 1, 0] + Source.GetPixel(0, j).G;
-                _summedTableB[j, 0] = _summedTableB[j - 1, 0] + Source.GetPixel(0, j).B;
+                int index = j < _radius + 1 ? 0 : (j > Source.Width + _radius - 1 ? Source.Width - 1 : j - _radius);
+
+                _summedTableA[j, 1] = _summedTableA[j - 1, 1] + Source.GetPixel(0, index).A;
+                _summedTableR[j, 1] = _summedTableR[j - 1, 1] + Source.GetPixel(0, index).R;
+                _summedTableG[j, 1] = _summedTableG[j - 1, 1] + Source.GetPixel(0, index).G;
+                _summedTableB[j, 1] = _summedTableB[j - 1, 1] + Source.GetPixel(0, index).B;
             }
 
             //setting table;
 
-            for (int i = 1; i < Source.Height; i++)
+            for (int i = 2; i < Source.Height + 2 * _radius + 1; i++)
             {
-                for (int j = 1; j < Source.Width; j++) 
+                for (int j = 2; j < Source.Width + 2 * _radius + 1; j++) 
                 {
+                    int indexI = i < _radius ? 0 : (i > Source.Width + _radius - 1 ? Source.Width - 1 : i - _radius);
+                    int indexJ = j < _radius ? 0 : (j > Source.Width + _radius - 1 ? Source.Width - 1 : j - _radius);
                     _summedTableA[i, j] = _summedTableA[i - 1, j] + _summedTableA[i, j - 1] 
-                        - _summedTableA[i - 1, j - 1] + Source.GetPixel(j, i).A;
+                        - _summedTableA[i - 1, j - 1] + Source.GetPixel(indexJ, indexI).A;
                     _summedTableR[i, j] = _summedTableR[i - 1, j] + _summedTableR[i, j - 1] 
-                        - _summedTableR[i - 1, j - 1] + Source.GetPixel(j, i).R;
+                        - _summedTableR[i - 1, j - 1] + Source.GetPixel(indexJ, indexI).R;
                     _summedTableG[i, j] = _summedTableG[i - 1, j] + _summedTableG[i, j - 1] 
-                        - _summedTableG[i - 1, j - 1] + Source.GetPixel(j, i).G;
+                        - _summedTableG[i - 1, j - 1] + Source.GetPixel(indexJ, indexI).G;
                     _summedTableB[i, j] = _summedTableB[i - 1, j] + _summedTableB[i, j - 1] 
-                        - _summedTableB[i - 1, j - 1] + Source.GetPixel(j, i).B;
+                        - _summedTableB[i - 1, j - 1] + Source.GetPixel(indexJ, indexI).B;
                 }
             }
         }

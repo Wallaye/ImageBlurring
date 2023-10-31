@@ -74,7 +74,7 @@ namespace ImageBlurring.Blurs
                     int sumR = (int)Math.Sqrt(sumRX * sumRX + sumRY * sumRY);
                     int sumG = (int)Math.Sqrt(sumGX * sumGX + sumGY * sumGY);
                     int sumB = (int)Math.Sqrt(sumBX * sumBX + sumBY * sumBY);
-                    Color pixel = GetGrayColor(sumR, sumG, sumB);
+                    //Color pixel = GetGrayColor(sumR, sumG, sumB);
                     int lowest = Math.Min(Math.Min(Math.Min(sumR, sumG), sumB), 255);
                     
                     result.SetPixel(j, i, Color.FromArgb(lowest, lowest, lowest));
