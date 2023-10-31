@@ -44,7 +44,7 @@ namespace ImageBlurring.Blurs
             {
                 for (int j = 0; j < Source.Width + 2 * _radius; j++)
                 {
-                    int indexI = i < _radius ? 0 : (i > Source.Width + _radius - 1 ? Source.Width - 1 : i - _radius);
+                    int indexI = i < _radius ? 0 : (i > Source.Height + _radius - 1 ? Source.Height - 1 : i - _radius);
                     int indexJ = j < _radius ? 0 : (j > Source.Width + _radius - 1 ? Source.Width - 1 : j - _radius);
                     pixelsA[i, j] = Source.GetPixel(indexJ, indexI).A;
                     pixelsR[i, j] = Source.GetPixel(indexJ, indexI).R;

@@ -95,7 +95,7 @@ namespace ImageBlurring.Blurs
             //initializing 1st col of matrix
             for (int j = 1; j < Source.Height + 2 * _radius + 1; j++)
             {
-                int index = j < _radius + 1 ? 0 : (j > Source.Width + _radius - 1 ? Source.Width - 1 : j - _radius);
+                int index = j < _radius + 1 ? 0 : (j > Source.Height + _radius - 1 ? Source.Height - 1 : j - _radius);
 
                 _summedTableA[j, 1] = _summedTableA[j - 1, 1] + Source.GetPixel(0, index).A;
                 _summedTableR[j, 1] = _summedTableR[j - 1, 1] + Source.GetPixel(0, index).R;
@@ -109,7 +109,7 @@ namespace ImageBlurring.Blurs
             {
                 for (int j = 2; j < Source.Width + 2 * _radius + 1; j++) 
                 {
-                    int indexI = i < _radius ? 0 : (i > Source.Width + _radius - 1 ? Source.Width - 1 : i - _radius);
+                    int indexI = i < _radius ? 0 : (i > Source.Height + _radius - 1 ? Source.Height - 1 : i - _radius);
                     int indexJ = j < _radius ? 0 : (j > Source.Width + _radius - 1 ? Source.Width - 1 : j - _radius);
                     _summedTableA[i, j] = _summedTableA[i - 1, j] + _summedTableA[i, j - 1] 
                         - _summedTableA[i - 1, j - 1] + Source.GetPixel(indexJ, indexI).A;

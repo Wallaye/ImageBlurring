@@ -59,7 +59,7 @@ namespace ImageBlurring.Blurs
             {
                 for (int j = 0; j < Source.Width + 2 * _radius; j++)
                 {   
-                    int indexI = i < _radius ? 0 : (i > Source.Width + _radius - 1 ? Source.Width - 1 : i - _radius);
+                    int indexI = i < _radius ? 0 : (i > Source.Height + _radius - 1 ? Source.Height - 1 : i - _radius);
                     int indexJ = j < _radius ? 0 : (j > Source.Width + _radius - 1 ? Source.Width - 1 : j - _radius);
                     pixelsA[i, j] = Source.GetPixel(indexJ, indexI).A;
                     pixelsR[i, j] = Source.GetPixel(indexJ, indexI).R;
@@ -76,8 +76,8 @@ namespace ImageBlurring.Blurs
             {
                 for (int j = 0; j < Source.Width; j++)
                 {
-                    Color c = Source.GetPixel(j, i);
-                    Color color = GetGrayColor(c.R, c.G, c.B);
+                    //Color c = Source.GetPixel(j, i);
+                    //Color color = GetGrayColor(c.R, c.G, c.B);
                     int sumRX = 0;
                     int sumRY = 0;
                     int sumGX = 0;
@@ -88,7 +88,7 @@ namespace ImageBlurring.Blurs
                     {
                         for (int y = -1; y <= 1; y++)
                         {
-                            Color temp = Source.GetPixel(j + y, i + x);
+                            //Color temp = Source.GetPixel(j + y, i + x);
                             sumRX += pixelsR[i + x + 1, j + y + 1] * GX[x + 1, y + 1];
                             sumRY += pixelsR[i + x + 1, j + y + 1] * GY[x + 1, y + 1];
                             sumGX += pixelsG[i + x + 1, j + y + 1] * GX[x + 1, y + 1];
